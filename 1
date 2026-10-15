@@ -1,0 +1,103 @@
+#include <iostream>
+#include <stdexcept>
+using namespace std;
+
+class MyVector
+{
+    int data[100];
+    int size;
+
+public:
+    MyVector(int n = 0)
+    {
+        if (n < 0 || n > 100)
+            throw invalid_argument("Size must be from 0 to 100");
+
+        size = n;
+        for (int i = 0; i < size; i++)
+            data[i] = 0;
+    }
+
+    int& operator[](int index)
+    {
+        if (index < 0 || index >= size)
+            throw out_of_range("Invalid index");
+
+        return data[index];
+    }
+
+    void pushBack(int value)
+    {
+        if (size == 100)
+            throw overflow_error("Vector is full");
+
+        data[size] = value;
+        size++;
+    }
+
+    void popBack()
+    {
+        if (size == 0)
+            throw out_of_range("Vector is empty");
+
+        size--;
+    }
+
+    void print() const
+    {
+        for (int i = 0; i < size; i++)
+            cout << data[i] << " ";
+        cout << endl;
+    }
+};
+
+int main()
+{
+    try
+    {
+        MyVector v(2);
+        v[0] = 10;
+        v[1] = 20;
+        v.pushBack(30);
+        v.print();
+        v.popBack();
+        v.print();
+
+        v[10] = 50;
+    }
+    catch (const exception& e)
+    {
+        cout << "Error: " << e.what() << endl;
+    }
+
+    try
+    {
+        MyVector v(-3);
+    }
+    catch (const exception& e)
+    {
+        cout << "Error: " << e.what() << endl;
+    }
+
+    try
+    {
+        MyVector v;
+        v.popBack();
+    }
+    catch (const exception& e)
+    {
+        cout << "Error: " << e.what() << endl;
+    }
+
+    try
+    {
+        MyVector v(100);
+        v.pushBack(5);
+    }
+    catch (const exception& e)
+    {
+        cout << "Error: " << e.what() << endl;
+    }
+
+    return 0;
+}
